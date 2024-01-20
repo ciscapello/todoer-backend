@@ -1,0 +1,38 @@
+version: "3"
+services:
+  api-service:
+    container_name: api-service
+    env_file: .env
+    build: ./api-service
+    ports:
+      - "3000:3000"
+    restart: on-failure
+    volumes:
+      - ./api-service:/app
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+
+  postgres:
+    image: postgres:latest
+    container_name: db-postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+volumes:
+  postgres:
+  api-service:
+
+networks:
+  backend-network:
+    driver: bridge
