@@ -8,6 +8,8 @@ import (
 	"github.com/ciscapello/api-service/internal/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose"
 )
 
 func Connect() *pgxpool.Pool {
@@ -25,12 +27,12 @@ func Connect() *pgxpool.Pool {
 		_, _ = fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
 		os.Exit(1)
 	}
-	// defer dbpool.Close()
 
-	// db := stdlib.OpenDBFromPool(dbpool)
-	// if err := goose.Up(db, "/internal/app/database/migrations"); err != nil {
-	// 	fmt.Println(err)
-	// }
+	db := stdlib.OpenDBFromPool(dbpool)
+
+	if err := goose.Up(db, "/app/internal/app/database/migrations"); err != nil {
+		fmt.Println(err)
+	}
 
 	var greeting string
 	err = dbpool.QueryRow(context.Background(), "select 'Hello, world!'").Scan(&greeting)

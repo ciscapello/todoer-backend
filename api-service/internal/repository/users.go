@@ -42,6 +42,7 @@ func (r *UsersRepo) CreateUser(email string, password string) (int, string) {
 
 	var id int
 	err := r.pool.QueryRow(context.Background(), sqlStatement, email, password).Scan(&id)
+	fmt.Println(err)
 	if err != nil {
 		fmt.Printf("error %v", err)
 		return 0, "cannot create user in db"

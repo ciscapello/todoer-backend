@@ -19,6 +19,7 @@ type registrationRequestBody struct {
 func (h *Handler) Registration(c *gin.Context) {
 	var body registrationRequestBody
 	err := json.NewDecoder(c.Request.Body).Decode(&body)
+
 	if err != nil {
 		message := "Bad request"
 		c.JSON(http.StatusBadRequest, gin.H{"message": message})
